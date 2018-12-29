@@ -1,9 +1,12 @@
 package io.selftrading;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 public class Main {
+    private static Logger log = LogManager.getLogger();
 
-    public static void main(String[] args){
-        System.out.println("hi");
+    public static void main(String[] args) {
+
     }
-
 }
