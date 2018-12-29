@@ -6,18 +6,38 @@ We use log4j2 as our logging system.
 ####How to log 
 Add
 ` private static Logger log = LogManager.getLogger();` 
-to your class.
+to your class. The IDE will import the default.
 
-The logging framework support log hierarchy.
+When need to log you use the log object for example _(those methods are overloaded meaning you can use different params use documentation)_:
 
-**FATAL**: the app (or at the very least a thread) is about to die horribly. This is where the info explaining why that's happening goes.
+`log.fatal("message")`
 
-**ERROR**: something that the app's doing that it should not. This isn't a user error ('invalid search query'); it's an assertion failure, network problem, etc etc., probably one that is going to abort the current operation
+`log.error("message")`
 
-**WARN**: something that's concerning but not causing the operation to abort; # of connections in the DB pool getting low, an unusual-but-expected timeout in an operation, etc. I often think of 'WARN' as something that's useful in aggregate; e.g. grep, group, and count them to get a picture of what's affecting the system health
+`log.warn("message")`
 
-**INFO**: Normal logging that's part of the normal operation of the app; diagnostic stuff so you can go back and say 'how often did this broad-level operation happen?', or 'how did the user's data get into this state?'
+`log.debug("message")`
 
-**DEBUG**: Off in production, on while debugging/developing, able to be turned on for debugging specific unexpected problems. This is where you might log detailed information about key method parameters or other information that is useful for finding likely problems in specific 'problematic' areas of the code.
+`log.trace("message")`
 
-**TRACE**: "Seriously, WTF is going on here?!?! I need to log every single statement I execute to find this @#$@ing memory corruption bug before I go insane". usually used when you want to debug everything in specific component  
+#### Explanation about the logs level from highest to lowest
+ 
+The logging framework support log hierarchy. We will log from DEBUG and above in development when code will be on production INFO/WARN and above.
+
+**FATAL**:
+Fatal represents truly catastrophic situations, as far as your application is concerned.  Your application is about to abort to prevent some kind of corruption or serious problem, if possible.  This entry in the log should probably result in someone getting a 3 AM phone call.
+
+**ERROR**:
+An error is a serious issue and represents the failure of something important going on in your application.  Unlike FATAL, the application itself isn’t going down the tubes.  Here you’ve got something like dropped database connections or the inability to access a file or service.  This will require someone’s attention probably sooner than later, but the application can limp along.
+
+**WARN**:
+Now we’re getting into the grayer area of hypothetical.  You use the WARN log level to indicate that you might have a problem and that you’ve detected an unusual situation.  Maybe you were trying to invoke a service and it failed a couple of times before connecting on an automatic retry.  It’s unexpected and unusual, but no real harm done, and it’s not known whether the issue will persist or recur.  Someone should investigate warnings.
+
+**INFO**:
+Finally, we can dial down the stress level.  INFO messages correspond to normal application behavior and milestones.  You probably won’t care too much about these entries during normal operations, but they provide the skeleton of what happened.  A service started or stopped.  You added a new user to the database.  That sort of thing.
+
+**DEBUG**:
+With DEBUG, you start to include more granular, diagnostic information.  Here, you’re probably getting into “noisy” territory and furnishing more information than you’d want in normal production situations.  You’re providing detailed diagnostic information for fellow developers, sysadmins, etc.
+
+**TRACE**:
+This is really fine-grained information—finer even than DEBUG.  When you’re at this level, you’re basically looking to capture every detail you possibly can about the application’s behavior.  This is likely to swamp your resources in production and is seriously diagnostic.
